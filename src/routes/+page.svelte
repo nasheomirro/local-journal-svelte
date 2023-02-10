@@ -1,5 +1,3 @@
 <script>
-	import Editor from '$lib/editor/Editor.svelte';
+	import { entries } from '$lib/entries/store';
 </script>
-
-<Editor />

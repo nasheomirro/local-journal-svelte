@@ -36,11 +36,9 @@
 	:global(.ProseMirror) {
 		@apply outline-none grow;
 	}
-
   :global(.ProseMirror > p) {
     @apply mb-2;
   }
-
 	:global(.ProseMirror > h2) {
 		@apply font-sans text-2xl font-bold mb-2;
 	}
