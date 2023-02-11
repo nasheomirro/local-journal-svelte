@@ -2,7 +2,8 @@ import type { ActionMessages, Entry } from '$lib/types';
 import type { EntryStore } from './store';
 
 interface ChannelActions {
-	setEntry: (payload: Entry) => void;
+	createEntry: (payload: Entry) => void;
+	updateEntry: (payload: Entry) => void;
 	deleteEntry: (payload: Entry) => void;
 }
 
@@ -16,7 +17,10 @@ export class EntryChannel {
 		this.postMessage = channel.postMessage.bind(channel);
 
 		const actions: ChannelActions = {
-			setEntry: (entry: Entry) => {
+			createEntry: (entry: Entry) => {
+				update((entries) => [entry, ...entries]);
+			},
+			updateEntry: (entry: Entry) => {
 				update((entries) =>
 					entries.map((existing) => (existing.id === entry.id ? entry : existing))
 				);

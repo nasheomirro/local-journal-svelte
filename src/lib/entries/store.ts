@@ -9,9 +9,15 @@ const initialValue = await db.getAllFromIndex('entries', 'by-date');
 const { set, subscribe, update } = writable(initialValue);
 const { postMessage } = new EntryChannel({ set, subscribe, update });
 
-const setEntry = async (entry: Entry) => {
+const createEntry = async (entry: Entry) => {
+	await db.add('entries', entry);
+	postMessage({ type: 'createEntry', payload: entry });
+	update((entries) => [entry, ...entries]);
+};
+
+const updateEntry = async (entry: Entry) => {
 	await db.put('entries', entry);
-	postMessage({ type: 'setEntry', payload: entry });
+	postMessage({ type: 'updateEntry', payload: entry });
 	update((entries) => entries.map((existing) => (existing.id === entry.id ? entry : existing)));
 };
 
@@ -21,4 +27,4 @@ const deleteEntry = async (entry: Entry) => {
 	update((entries) => entries.filter((existing) => existing.id !== entry.id));
 };
 
-export const entries = { subscribe, setEntry, deleteEntry };
+export const entries = { subscribe, createEntry, updateEntry, deleteEntry };
