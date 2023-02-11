@@ -14,12 +14,24 @@
 	let editor: Editor;
 	let isUnsaved = writable(false);
 
+	const handleSave = async () => {
+		await entries.updateEntry({ ...entry, content: editor.getHTML() });
+		$isUnsaved = false;
+	};
+
+	let debounceTimeId: null | NodeJS.Timeout = null;
+	const debounceTime = 4000;
+
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			extensions: [StarterKit.configure({ heading: { levels: [2, 3, 4] } })],
 			content: entry.content,
 			onUpdate: () => {
+				if (debounceTimeId) clearTimeout(debounceTimeId);
+				debounceTimeId = setTimeout(() => {
+					if ($isUnsaved) handleSave();
+				}, debounceTime);
 				$isUnsaved = true;
 			},
 			onTransaction: () => {
@@ -39,13 +51,9 @@
 		return () => {
 			editor.destroy();
 			window.removeEventListener('beforeunload', warnUserListener);
+      debounceTimeId && clearTimeout(debounceTimeId);
 		};
 	});
-
-	const handleSave = async () => {
-		await entries.updateEntry({ ...entry, content: editor.getHTML() });
-		$isUnsaved = false;
-	};
 
 	const handleCustomShortcuts = async (e: KeyboardEvent) => {
 		const mod = e.ctrlKey || e.metaKey;

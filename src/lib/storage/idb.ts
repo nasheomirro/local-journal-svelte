@@ -1,19 +1,18 @@
 import type { Entry } from '$lib/types';
-import { openDB } from 'idb';
-import type { DBSchema } from 'idb/build/entry';
+import { openDB, type DBSchema } from 'idb';
 
 interface JournalSchema extends DBSchema {
 	entries: {
 		key: string;
 		value: Entry;
-    indexes: { 'by-date': Date };
+		indexes: { 'by-date': Date };
 	};
 }
 
 const db = await openDB<JournalSchema>('journal', 1, {
 	upgrade: (db) => {
 		const entries = db.createObjectStore('entries', { keyPath: 'id' });
-    entries.createIndex('by-date', "date")
+		entries.createIndex('by-date', 'date');
 	}
 });
 

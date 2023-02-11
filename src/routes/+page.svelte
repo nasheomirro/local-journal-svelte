@@ -15,23 +15,30 @@
 		await entries.createEntry(newEntry);
 		goto(newEntry.id);
 	};
+
+	const deleteEntry = async (entry: Entry) => {
+		await entries.deleteEntry(entry);
+	};
 </script>
 
 <svelte:head>
-  <title>Journal</title>
+	<title>Journal</title>
 </svelte:head>
 
 <Navbar>
-	<a href="/">Home</a>
-	<button on:click={createEntry}>New entry</button>
+	<button class="ml-auto" on:click={createEntry}>New entry</button>
 </Navbar>
 
 <ul>
 	{#each $entries as entry}
-		<li>
-			<a href={entry.id}>
+		<li class="flex justify-between px-2 pb-2">
+			<span class="w-full">
 				{entry.date}
-			</a>
+			</span>
+			<div class="flex gap-6">
+        <button class="text-red-400" on:click={() => deleteEntry(entry)}>Delete</button>
+				<a href={entry.id}>Edit</a>
+			</div>
 		</li>
 	{/each}
 </ul>
