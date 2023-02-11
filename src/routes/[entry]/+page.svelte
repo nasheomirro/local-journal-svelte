@@ -5,6 +5,7 @@
 
 	export let data: PageData;
 	let entry = $entries.find((entry) => entry.id === data.id);
+
 </script>
 
 {#if entry}

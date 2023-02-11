@@ -5,38 +5,63 @@
 	import EditorToolbar from './EditorToolbar.svelte';
 	import type { Entry } from '$lib/types';
 	import { entries } from '$lib/entries/store';
+	import EditorNavbar from './EditorNavbar.svelte';
+	import { writable } from 'svelte/store';
 
 	export let entry: Entry;
 
 	let element: HTMLDivElement;
 	let editor: Editor;
+	let isUnsaved = writable(false);
 
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			extensions: [StarterKit.configure({ heading: { levels: [2, 3, 4] } })],
 			content: entry.content,
+			onUpdate: () => {
+				$isUnsaved = true;
+			},
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;
 			}
 		});
 
+		const warnUserListener = (e: BeforeUnloadEvent) => {
+			if ($isUnsaved) {
+				return (e.returnValue = 'changes may not be saved.');
+			}
+		};
+
+		window.addEventListener('beforeunload', warnUserListener);
+
 		return () => {
 			editor.destroy();
+			window.removeEventListener('beforeunload', warnUserListener);
 		};
 	});
 
+	const handleSave = async () => {
+		await entries.updateEntry({ ...entry, content: editor.getHTML() });
+		$isUnsaved = false;
+	};
+
 	const handleCustomShortcuts = async (e: KeyboardEvent) => {
 		const mod = e.ctrlKey || e.metaKey;
-		if (mod && e.key === 'S') {
+		if (mod && e.key === 's') {
 			e.preventDefault();
-			await entries.updateEntry({ ...entry, content: editor.getHTML() });
+			await handleSave();
 		}
 	};
 </script>
 
+<svelte:head>
+	<title>{`${$isUnsaved ? '• ' : ''}${entry.date}`}</title>
+</svelte:head>
+
 {#if editor}
+	<EditorNavbar on:save={handleSave} />
 	<EditorToolbar {editor} />
 {/if}
 

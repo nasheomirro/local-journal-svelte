@@ -5,6 +5,7 @@ import { EntryChannel } from './channel';
 
 export type EntryStore = Writable<Entry[]>;
 
+// TODO: make into cursor and sort it yourself
 const initialValue = await db.getAllFromIndex('entries', 'by-date');
 const { set, subscribe, update } = writable(initialValue);
 const { postMessage } = new EntryChannel({ set, subscribe, update });

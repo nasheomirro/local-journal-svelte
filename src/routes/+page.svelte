@@ -1,7 +1,8 @@
 <script lang="ts">
+	import Navbar from '$lib/components/Navbar.svelte';
+	import type { Entry } from '$lib/types';
 	import { goto } from '$app/navigation';
 	import { entries } from '$lib/entries/store';
-	import type { Entry } from '$lib/types';
 	import { nanoid } from 'nanoid';
 
 	const createEntry = async () => {
@@ -16,11 +17,21 @@
 	};
 </script>
 
-<div>
+<svelte:head>
+  <title>Journal</title>
+</svelte:head>
+
+<Navbar>
+	<a href="/">Home</a>
 	<button on:click={createEntry}>New entry</button>
-	<ul>
-		{#each $entries as entry}
-			<li>{entry.date}</li>
-		{/each}
-	</ul>
-</div>
+</Navbar>
+
+<ul>
+	{#each $entries as entry}
+		<li>
+			<a href={entry.id}>
+				{entry.date}
+			</a>
+		</li>
+	{/each}
+</ul>
