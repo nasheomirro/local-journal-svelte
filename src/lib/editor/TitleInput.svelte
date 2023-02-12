@@ -5,6 +5,7 @@
 <div class="mb-4 text-sm">
 	<label for="entry-title" class="pr-1 font-medium">label:</label>
 	<input
+    on:keydown
 		bind:value={title}
 		id="entry-title"
 		placeholder="it was ..."

@@ -11,30 +11,33 @@
 
 	export let entry: Entry;
 
+	let draft = { ...entry };
 	let element: HTMLDivElement;
 	let editor: Editor;
-	let isUnsaved = writable(false);
+	let isUnsaved = false;
 
 	const handleSave = async () => {
-		await entries.updateEntry({ ...entry, content: editor.getHTML() });
-		$isUnsaved = false;
+		await entries.updateEntry({ ...draft, content: editor.getHTML() });
+		isUnsaved = false;
 	};
 
 	let debounceTimeId: null | NodeJS.Timeout = null;
 	const debounceTime = 4000;
 
+	const debounceSave = () => {
+		if (debounceTimeId) clearTimeout(debounceTimeId);
+		debounceTimeId = setTimeout(() => {
+			if (isUnsaved) handleSave();
+		}, debounceTime);
+		isUnsaved = true;
+	};
+
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			extensions: [StarterKit.configure({ heading: { levels: [2, 3, 4] } })],
-			content: entry.content,
-			onUpdate: () => {
-				if (debounceTimeId) clearTimeout(debounceTimeId);
-				debounceTimeId = setTimeout(() => {
-					if ($isUnsaved) handleSave();
-				}, debounceTime);
-				$isUnsaved = true;
-			},
+			content: draft.content,
+			onUpdate: debounceSave,
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;
@@ -42,7 +45,7 @@
 		});
 
 		const warnUserListener = (e: BeforeUnloadEvent) => {
-			if ($isUnsaved) {
+			if (isUnsaved) {
 				return (e.returnValue = 'changes may not be saved.');
 			}
 		};
@@ -66,16 +69,17 @@
 </script>
 
 <svelte:head>
-	<title>{`${$isUnsaved ? '• ' : ''}${entry.date}`}</title>
+	<title>{`${isUnsaved ? '• ' : ''}${draft.date}`}</title>
 </svelte:head>
+<svelte:window on:keydown={handleCustomShortcuts} />
 
 {#if editor}
 	<EditorNavbar on:save={handleSave} />
-	<TitleInput bind:title={entry.title} />
+	<TitleInput on:keydown={debounceSave} bind:title={draft.title} />
 	<EditorToolbar {editor} />
 {/if}
 
-<div bind:this={element} on:keydown={handleCustomShortcuts} />
+<div bind:this={element} />
 
 <style>
 	:global(.ProseMirror) {

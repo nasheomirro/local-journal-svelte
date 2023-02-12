@@ -5,6 +5,7 @@
 	import { entries } from '$lib/entries/store';
 	import { nanoid } from 'nanoid';
 	import { formatDate } from '$lib/utils';
+	import Button from '$lib/components/Button.svelte';
 
 	const createEntry = async () => {
 		const newEntry: Entry = {
@@ -27,7 +28,7 @@
 </svelte:head>
 
 <Navbar>
-	<button class="ml-auto" on:click={createEntry}>new entry</button>
+	<Button class="ml-auto" on:click={createEntry}>new entry</Button>
 </Navbar>
 
 <ul>
