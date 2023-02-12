@@ -1,4 +1,5 @@
 export type Entry = Readonly<{
+  title: string;
 	id: string;
 	content: string;
 	date: Date;

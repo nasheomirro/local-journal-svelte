@@ -8,15 +8,11 @@
 	const th = (level: 1 | 2 | 3 | 4) => cf().toggleHeading({ level }).run();
 </script>
 
-<div class="sticky top-0 z-10 mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 p-2 pl-0 border-b border-b-red-200 bg-white">
+<div
+	class="sticky top-0 z-10 mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 p-2 pl-0 bg-white"
+>
 	<div class="flex flex-wrap items-center gap-2">
-		<ToolbarIcon
-			active={editor.isActive('paragraph')}
-			on:click={() => {
-				console.log('clicked');
-				cf().setParagraph().run();
-			}}
-		>
+		<ToolbarIcon active={editor.isActive('paragraph')} on:click={() => cf().setParagraph().run()}>
 			<span class="sr-only">set to paragraph</span>
 			<svg aria-hidden width="100%" viewBox="0 0 27 27" fill="currentColor">
 				<path

@@ -7,6 +7,7 @@
 	import { entries } from '$lib/entries/store';
 	import EditorNavbar from './EditorNavbar.svelte';
 	import { writable } from 'svelte/store';
+	import TitleInput from './TitleInput.svelte';
 
 	export let entry: Entry;
 
@@ -51,7 +52,7 @@
 		return () => {
 			editor.destroy();
 			window.removeEventListener('beforeunload', warnUserListener);
-      debounceTimeId && clearTimeout(debounceTimeId);
+			debounceTimeId && clearTimeout(debounceTimeId);
 		};
 	});
 
@@ -70,6 +71,7 @@
 
 {#if editor}
 	<EditorNavbar on:save={handleSave} />
+	<TitleInput bind:title={entry.title} />
 	<EditorToolbar {editor} />
 {/if}
 

@@ -5,8 +5,23 @@ import { EntryChannel } from './channel';
 
 export type EntryStore = Writable<Entry[]>;
 
-// TODO: make into cursor and sort it yourself
-const initialValue = await db.getAllFromIndex('entries', 'by-date');
+const getInitialValue = async () => {
+	const entries = [];
+	let cursor = await db
+		.transaction('entries', 'readonly')
+		.objectStore('entries')
+		.index('by-date')
+		.openCursor();
+
+	while (cursor) {
+		const entry = cursor.value;
+		entries.unshift(entry);
+		cursor = await cursor.continue();
+	}
+	return entries;
+};
+
+const initialValue = await getInitialValue();
 const { set, subscribe, update } = writable(initialValue);
 const { postMessage } = new EntryChannel({ set, subscribe, update });
 

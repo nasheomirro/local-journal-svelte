@@ -3,9 +3,9 @@
 	import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher<{ save: undefined }>();
-
 </script>
+
 <Navbar>
-  <a href="/">Home</a>
-  <button on:click={() => dispatch('save')}>Save Entry</button>
+  <a href="/">back</a>
+  <button on:click={() => dispatch('save')}>save entry</button>
 </Navbar>
