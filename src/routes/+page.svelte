@@ -9,7 +9,7 @@
 
 	const createEntry = async () => {
 		const newEntry: Entry = {
-      title: '',
+			title: '',
 			id: nanoid(),
 			date: new Date(),
 			content: ''
@@ -33,15 +33,18 @@
 
 <ul>
 	{#each $entries as entry}
-		<li class="flex justify-between items-center px-2 py-2 border-b last:border-b-0">
-      <div class="grid grid-cols-2 w-full items-center">
-        <span>{entry.title || "no-title"}</span>
-        <span class="w-full text-sm">
-          {formatDate(entry.date)}
-        </span>
-      </div>
-			<div class="flex gap-6">
-        <button class="text-red-400" on:click={() => deleteEntry(entry)}>delete</button>
+		<li class="flex flex-col xs:flex-row justify-between items-center rounded-sm dark:bg-stone-800 dark:border-none py-2 px-3 border border-stone-200 mb-2 xs:border-b">
+			<div class="grid grid-cols-1 xs:grid-cols-2 w-full items-center">
+				<span class="font-medium">{entry.title || 'no-title'}</span>
+				<div class="w-full text-sm">
+					<span class="md:hidden">{formatDate(entry.date, 'short')}</span>
+					<span class="hidden md:block">
+						{formatDate(entry.date)}
+					</span>
+				</div>
+			</div>
+			<div class="flex gap-6 ml-auto text-sm">
+				<button class="text-red-400" on:click={() => deleteEntry(entry)}>delete</button>
 				<a href={entry.id}>edit</a>
 			</div>
 		</li>

@@ -7,6 +7,6 @@
 </script>
 
 <Navbar>
-	<a href="/">back</a>
+	<a href="/" class="text-sm">back</a>
 	<Button on:click={() => dispatch('save')}>save entry</Button>
 </Navbar>

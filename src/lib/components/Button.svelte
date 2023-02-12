@@ -9,7 +9,7 @@
 <button
 	on:click
 	{...$$restProps}
-	class={`px-4 py-1 bg-orange-300 text-sm ${$$restProps.class || ''}`}
+	class={`px-4 py-1 bg-orange-300 dark:bg-orange-400 text-sm ${$$restProps.class || ''}`}
 >
 	<slot />
 </button>

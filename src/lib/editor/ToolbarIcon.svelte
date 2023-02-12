@@ -6,8 +6,8 @@
 
 <button on:click
 	class={twJoin(
-		'flex h-auto w-6 items-center justify-center p-1',
-		active && 'dark:bg-dark-300 bg-black text-white'
+		'flex h-auto w-6 p-1 sm:w-7 items-center justify-center sm:p-1.5',
+		active && 'bg-black dark:bg-stone-800 text-white'
 	)}
 >
 	<slot />

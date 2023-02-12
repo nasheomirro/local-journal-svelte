@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class="sticky top-0 z-10 mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 p-2 pl-0 bg-white"
+	class="sticky top-0 z-10 mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 p-2 pl-0 bg-white dark:bg-stone-900"
 >
 	<div class="flex flex-wrap items-center gap-2">
 		<ToolbarIcon active={editor.isActive('paragraph')} on:click={() => cf().setParagraph().run()}>

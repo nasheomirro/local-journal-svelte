@@ -8,6 +8,7 @@
 	import EditorNavbar from './EditorNavbar.svelte';
 	import { writable } from 'svelte/store';
 	import TitleInput from './TitleInput.svelte';
+	import { formatDate } from '$lib/utils';
 
 	export let entry: Entry;
 
@@ -69,7 +70,7 @@
 </script>
 
 <svelte:head>
-	<title>{`${isUnsaved ? '• ' : ''}${draft.date}`}</title>
+	<title>{`${isUnsaved ? '• ' : ''}${draft.title || formatDate(draft.date)}`}</title>
 </svelte:head>
 <svelte:window on:keydown={handleCustomShortcuts} />
 
@@ -79,7 +80,7 @@
 	<EditorToolbar {editor} />
 {/if}
 
-<div bind:this={element} />
+<div bind:this={element} class="flex min-h-[30rem] dark:bg-stone-800 border border-stone-200 dark:border-none rounded-sm p-2 xs:p-3 sm:p-4" />
 
 <style>
 	:global(.ProseMirror) {

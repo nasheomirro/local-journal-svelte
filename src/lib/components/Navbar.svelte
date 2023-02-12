@@ -1,3 +1,3 @@
-<nav class="py-1 flex justify-between mb-4">
+<nav class="py-1 flex justify-between items-center mb-4">
   <slot />
 </nav>

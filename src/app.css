@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply dark:bg-stone-900 dark:text-white;
+}
+
+html {
+  font-size: 90%;
+}
+
+@screen md {
+  html {
+    font-size: 100%;
+  } 
+}
