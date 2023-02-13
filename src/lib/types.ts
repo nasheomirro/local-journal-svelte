@@ -3,6 +3,7 @@ export type Entry = Readonly<{
 	id: string;
 	content: string;
 	date: Date;
+  category?: string;
 }>;
 
 type GetValues<T> = T[keyof T];
