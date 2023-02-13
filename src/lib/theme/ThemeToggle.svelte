@@ -8,7 +8,7 @@
 </script>
 
 <button
-	class="w-7 h-7 relative text-stone-500 hover:text-stone-700 transition-colors"
+	class="w-7 h-7 relative text-red-500 transition-colors"
 	on:click={toggle}
 >
 	<span class="sr-only">switch themes</span>

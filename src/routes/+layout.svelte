@@ -1,13 +1,12 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
 	import { theme } from '$lib/theme/store';
-	import { onMount } from 'svelte';
 	import '../app.css';
 
 	let root: HTMLElement;
 	onMount(() => {
 		root = document.documentElement;
 	});
-
 	$: root && ($theme === 'dark' ? root.classList.add('dark') : root.classList.remove('dark'));
 </script>
 
