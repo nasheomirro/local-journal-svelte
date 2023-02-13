@@ -1,11 +1,12 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
 	import type { Entry } from '$lib/types';
-	import { goto } from '$app/navigation';
 	import { entries } from '$lib/entries/store';
 	import { nanoid } from 'nanoid';
 	import { formatDate } from '$lib/utils';
-	import Button from '$lib/components/Button.svelte';
+	import ThemeToggle from '$lib/theme/ThemeToggle.svelte';
+	import { flip } from 'svelte/animate';
+	import { fade } from 'svelte/transition';
 
 	const createEntry = async () => {
 		const newEntry: Entry = {
@@ -15,7 +16,6 @@
 			content: ''
 		};
 		await entries.createEntry(newEntry);
-		goto(newEntry.id);
 	};
 
 	const deleteEntry = async (entry: Entry) => {
@@ -28,12 +28,23 @@
 </svelte:head>
 
 <Navbar>
-	<Button class="ml-auto" on:click={createEntry}>new entry</Button>
+	<div class="flex gap-2 items-center ml-auto">
+		<ThemeToggle />
+	</div>
 </Navbar>
 
+<button
+	class="w-full p-2 mb-4 border rounded-sm bg-white border-stone-200 text-stone-500 dark:text-white dark:bg-stone-800 dark:opacity-50 dark:border-none"
+	on:click={createEntry}>new entry</button
+>
+
 <ul>
-	{#each $entries as entry}
-		<li class="flex flex-col xs:flex-row justify-between items-center rounded-sm dark:bg-stone-800 dark:border-none py-2 px-3 border border-stone-200 mb-2 xs:border-b">
+	{#each $entries as entry (entry.id)}
+		<li
+			transition:fade|local={{ duration: 200 }}
+			animate:flip={{ duration: 400 }}
+			class="flex flex-col xs:flex-row justify-between items-center bg-white rounded-sm dark:bg-stone-800 dark:border-none py-2 px-3 border border-stone-200 mb-2 xs:border-b"
+		>
 			<div class="grid grid-cols-1 xs:grid-cols-2 w-full items-center">
 				<span class="font-medium">{entry.title || 'no-title'}</span>
 				<div class="w-full text-sm">

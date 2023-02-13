@@ -8,7 +8,6 @@
     on:keydown
 		bind:value={title}
 		id="entry-title"
-		placeholder="it was ..."
 		class="focus:outline-none dark:bg-stone-800 border-stone-200 dark:border-b-0 border-b p-1 sm:px-2 w-60"
 	/>
 </div>

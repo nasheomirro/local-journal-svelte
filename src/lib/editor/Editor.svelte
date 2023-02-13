@@ -80,7 +80,10 @@
 	<EditorToolbar {editor} />
 {/if}
 
-<div bind:this={element} class="flex min-h-[30rem] dark:bg-stone-800 border border-stone-200 dark:border-none rounded-sm p-2 xs:p-3 sm:p-4" />
+<div
+	class="flex min-h-[30rem] dark:bg-stone-800 border border-stone-200 dark:border-none rounded-sm p-2 xs:p-3 sm:p-4"
+	bind:this={element}
+/>
 
 <style>
 	:global(.ProseMirror) {
