@@ -1,0 +1,125 @@
+<script lang="ts">
+	import IconButton from '$lib/components/IconButton.svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import { categories } from '$lib/storage/categories';
+	import type { Category } from '$lib/types';
+	import { nanoid } from 'nanoid';
+	import { flip } from 'svelte/animate';
+	import { fade, fly } from 'svelte/transition';
+	import { twMerge } from 'tailwind-merge';
+	import CloseIcon from './CloseIcon.svelte';
+	import PlusIcon from './PlusIcon.svelte';
+	import SettingsIcon from './SettingsIcon.svelte';
+
+	export let categoryId: string;
+	let isSettingsOpen = false;
+
+	const editCategory = (e: Event & { currentTarget: HTMLFormElement }, category: Category) => {
+		e.preventDefault();
+
+		const formData = new FormData(e.currentTarget);
+		categories.updateCategory({
+			...category,
+			name: formData.get('category-name')?.toString() || category.name
+		});
+	};
+
+	const createCategory = () => {
+		categories.createCategory({
+			name: 'no-name',
+			index: $categories.length,
+			id: nanoid()
+		});
+	};
+
+	const deleteCategory = (category: Category) => {
+		categories.deleteCategory(category);
+	};
+</script>
+
+<ul class="flex flex-wrap gap-1.5 mb-2">
+	<li>
+		<IconButton
+			class="hover:rotate-180 ease-in-out origin-center"
+			on:click={() => (isSettingsOpen = true)}
+		>
+			<span class="sr-only">open category settings</span>
+			<SettingsIcon />
+		</IconButton>
+	</li>
+	{#each $categories as category (category.id)}
+		<li transition:fade|local={{ duration: 200 }} animate:flip={{ duration: 200 }}>
+			<a
+				href={`?c=${category.id}`}
+				class={twMerge(
+					` transition-colors py-1.5 px-4 text-sm inline-block rounded-2xl border border-stone-200 dark:border-stone-900 dark:bg-stone-800`,
+					categoryId === category.id ? 'bg-red-400 text-white dark:bg-stone-700' : ''
+				)}>{category.name}</a
+			>
+		</li>
+	{/each}
+</ul>
+
+{#if isSettingsOpen}
+	<Modal>
+		<div
+			transition:fade={{ duration: 100 }}
+			class="fixed top-0 left-0 w-full h-full flex items-center justify-center p-2"
+		>
+			<div
+				aria-hidden="true"
+				class="bg-stone-900 opacity-60 w-full h-full absolute -z-10"
+				on:click={() => (isSettingsOpen = false)}
+			/>
+			<div
+				transition:fly={{ y: 20, duration: 100 }}
+				class="max-w-screen-sm bg-white dark:bg-stone-800 min-h-[10rem] py-3 w-full rounded"
+			>
+				<div class="flex items-center px-4 mb-3">
+					<span class="font-bold block">Categories</span>
+					<div class="flex gap-2 ml-auto">
+						<IconButton class="dark:border-stone-600 dark:border-solid" on:click={createCategory}>
+							<span class="sr-only">create new category</span>
+							<PlusIcon />
+						</IconButton>
+						<IconButton
+							class="dark:border-stone-600 dark:border-solid"
+							on:click={() => (isSettingsOpen = false)}
+						>
+							<span class="sr-only">close category settings</span>
+							<CloseIcon />
+						</IconButton>
+					</div>
+				</div>
+				<ul
+					class="flex flex-col gap-1 h-40 overflow-y-scroll scrollbar-thin pl-4 pr-6 scrollbar-thumb-stone-200 dark:scrollbar-thumb-stone-700 dark:scrollbar-track-stone-900"
+				>
+					{#each $categories as category (category.id)}
+						<li transition:fade|local={{ duration: 200 }} animate:flip={{ duration: 200 }}>
+							<form
+								class="flex items-end flex-wrap bg-white dark:bg-stone-800"
+								on:submit={(e) => editCategory(e, category)}
+							>
+								<input
+									name="category-name"
+									class="focus:outline-none bg-transparent border-stone-200 dark:border-b-stone-600 border-b p-1 sm:px-2 w-60"
+									value={category.name}
+								/>
+								<div class="ml-auto flex flex-wrap gap-4">
+									{#if category.id !== 'main'}
+										<button
+											type="button"
+											class="text-sm text-red-400"
+											on:click={() => deleteCategory(category)}>delete</button
+										>
+									{/if}
+									<button class="text-sm">save</button>
+								</div>
+							</form>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		</div>
+	</Modal>
+{/if}

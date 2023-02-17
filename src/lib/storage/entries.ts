@@ -1,7 +1,7 @@
 import { db } from '$lib/storage/idb';
-import type { Entry } from '$lib/types';
-import { writable, type Writable } from 'svelte/store';
-import { EntryChannel } from './channel';
+import type { Category, Entry } from '$lib/types';
+import { get, writable, type Writable } from 'svelte/store';
+import { EntryChannel } from './channels';
 
 export type EntryStore = Writable<Entry[]>;
 
@@ -43,4 +43,29 @@ const deleteEntry = async (entry: Entry) => {
 	update((entries) => entries.filter((existing) => existing.id !== entry.id));
 };
 
-export const entries = { subscribe, createEntry, updateEntry, deleteEntry };
+const deleteEntriesByCategory = async (category: Category) => {
+	const transaction = db.transaction('entries', 'readwrite');
+	const entriesDb = transaction.objectStore('entries');
+
+	const entries = get({ subscribe });
+	const promises = entries
+		.filter((entry) => entry.categoryId === category.id)
+		.map((entry) => entriesDb.delete(entry.id));
+
+	await Promise.all(promises);
+	postMessage({ type: 'deleteEntriesByCategory', payload: category });
+	update((entries) => {
+		const deleteIds = entries
+			.filter((entry) => entry.categoryId !== category.id)
+			.map((entry) => entry.id);
+		return entries.filter((existing) => !deleteIds.includes(existing.id));
+	});
+};
+
+export const entries = {
+	subscribe,
+	createEntry,
+	updateEntry,
+	deleteEntry,
+	deleteEntriesByCategory
+};

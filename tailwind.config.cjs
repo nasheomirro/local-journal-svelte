@@ -3,15 +3,16 @@ const colors = require('tailwindcss/colors');
 
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
-  darkMode: 'class',
+	darkMode: 'class',
 	theme: {
-    colors: {
-      orange: colors.orange,
-      red: colors.red,
-      stone: colors.stone,
-      black: colors.black,
-      white: colors.white
-    },
+		colors: {
+			transparent: colors.transparent,
+			orange: colors.orange,
+			red: colors.red,
+			stone: colors.stone,
+			black: colors.black,
+			white: colors.white
+		},
 		screens: {
 			xs: '420px',
 			sm: '640px',
@@ -19,5 +20,5 @@ module.exports = {
 			lg: '1024px'
 		}
 	},
-	plugins: []
+	plugins: [require('tailwind-scrollbar')]
 };

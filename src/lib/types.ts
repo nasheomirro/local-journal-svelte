@@ -1,9 +1,15 @@
 export type Entry = Readonly<{
-  title: string;
+	title: string;
 	id: string;
 	content: string;
 	date: Date;
-  category?: string;
+	categoryId: string;
+}>;
+
+export type Category = Readonly<{
+	name: string;
+	index: number;
+	id: string;
 }>;
 
 type GetValues<T> = T[keyof T];

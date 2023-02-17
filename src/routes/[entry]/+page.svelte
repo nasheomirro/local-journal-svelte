@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Editor from '$lib/editor/Editor.svelte';
-	import { entries } from '$lib/entries/store';
+	import { entries } from '$lib/storage/entries';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

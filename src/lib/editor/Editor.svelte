@@ -4,9 +4,8 @@
 	import StarterKit from '@tiptap/starter-kit';
 	import EditorToolbar from './EditorToolbar.svelte';
 	import type { Entry } from '$lib/types';
-	import { entries } from '$lib/entries/store';
+	import { entries } from '$lib/storage/entries';
 	import EditorNavbar from './EditorNavbar.svelte';
-	import { writable } from 'svelte/store';
 	import TitleInput from './TitleInput.svelte';
 	import { formatDate } from '$lib/utils';
 
