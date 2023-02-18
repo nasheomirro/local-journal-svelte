@@ -47,17 +47,13 @@ const deleteEntriesByCategory = async (category: Category) => {
 	const transaction = db.transaction('entries', 'readwrite');
 	const entriesDb = transaction.objectStore('entries');
 
-	const entries = get({ subscribe });
-	const promises = entries
-		.filter((entry) => entry.categoryId === category.id)
-		.map((entry) => entriesDb.delete(entry.id));
+	const entriesToDelete = get({ subscribe }).filter((entry) => entry.categoryId === category.id);
+	const promises = entriesToDelete.map((entry) => entriesDb.delete(entry.id));
 
 	await Promise.all(promises);
 	postMessage({ type: 'deleteEntriesByCategory', payload: category });
 	update((entries) => {
-		const deleteIds = entries
-			.filter((entry) => entry.categoryId !== category.id)
-			.map((entry) => entry.id);
+		const deleteIds = entriesToDelete.map((entry) => entry.id);
 		return entries.filter((existing) => !deleteIds.includes(existing.id));
 	});
 };
