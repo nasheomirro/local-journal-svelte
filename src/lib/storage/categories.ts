@@ -31,9 +31,13 @@ const updateCategory = async (category: Category) => {
 
 const deleteCategory = async (category: Category) => {
 	await entries.deleteEntriesByCategory(category);
-	await db.delete('categories', category.id);
-	postMessage({ type: 'deleteCategory', payload: category });
-	update((categories) => categories.filter((existing) => existing.id !== category.id));
+
+	// deleting main will only clear it.
+	if (category.id !== 'main') {
+		await db.delete('categories', category.id);
+		postMessage({ type: 'deleteCategory', payload: category });
+		update((categories) => categories.filter((existing) => existing.id !== category.id));
+	}
 };
 
 export const categories = { subscribe, createCategory, updateCategory, deleteCategory };

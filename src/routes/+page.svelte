@@ -21,13 +21,10 @@
 	</div>
 </Navbar>
 
+<Categories categoryId={activeCategoryId} />
+
 {#if $categories.find((category) => category.id === activeCategoryId)}
-	<Categories categoryId={activeCategoryId} />
 	<Entries categoryId={activeCategoryId} />
 {:else}
-	<EmptyMessage>
-		This category was either deleted or doesn't exist.&nbsp;<a class="text-red-400" href="/"
-			>go back to main</a
-		>
-	</EmptyMessage>
+	<EmptyMessage>This category was either deleted or doesn't exist.</EmptyMessage>
 {/if}

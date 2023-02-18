@@ -68,13 +68,11 @@
 							value={category.name}
 						/>
 						<div class="ml-auto flex flex-wrap gap-4">
-							{#if category.id !== 'main'}
-								<button
-									type="button"
-									class="text-sm text-red-400"
-									on:click={() => deleteCategory(category)}>delete</button
-								>
-							{/if}
+							<button
+								type="button"
+								class="text-sm text-red-400"
+								on:click={() => deleteCategory(category)}>delete</button
+							>
 							<button class="text-sm">save</button>
 						</div>
 					</form>

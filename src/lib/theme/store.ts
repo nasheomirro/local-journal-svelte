@@ -4,5 +4,7 @@ import { writable } from 'svelte/store';
 // if it doesn't exist, get user preference
 export type Theme = 'dark' | 'light';
 
-const initialValue = 'dark';
+const initialValue: Theme =
+	window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
 export const theme = writable<Theme>(initialValue);
