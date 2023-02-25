@@ -5,7 +5,7 @@
 	import { categories } from '$lib/storage/categories';
 
 	import IconButton from '$lib/components/IconButton.svelte';
-	import CategoryModal from './CategoryModal.svelte';
+	import CategoryModal from './categoryModal/CategoryModal.svelte';
 	import SettingsIcon from './SettingsIcon.svelte';
 
 	export let categoryId: string;

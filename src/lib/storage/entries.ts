@@ -44,11 +44,10 @@ const deleteEntry = async (entry: Entry) => {
 };
 
 const deleteEntriesByCategory = async (category: Category) => {
-	const transaction = db.transaction('entries', 'readwrite');
-	const entriesDb = transaction.objectStore('entries');
+	const dbStore = db.transaction('entries', 'readwrite').objectStore('entries');
 
 	const entriesToDelete = get({ subscribe }).filter((entry) => entry.categoryId === category.id);
-	const promises = entriesToDelete.map((entry) => entriesDb.delete(entry.id));
+	const promises = entriesToDelete.map((entry) => dbStore.delete(entry.id));
 
 	await Promise.all(promises);
 	postMessage({ type: 'deleteEntriesByCategory', payload: category });

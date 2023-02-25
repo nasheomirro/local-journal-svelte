@@ -29,6 +29,44 @@ const updateCategory = async (category: Category) => {
 	);
 };
 
+const switchCategories = async (categoryIds: [string, string]) => {
+	const dbStore = db.transaction('categories', 'readwrite').objectStore('categories');
+	const firstCategory = await dbStore.get(categoryIds[0]);
+	const secondCategory = await dbStore.get(categoryIds[1]);
+	if (firstCategory && secondCategory) {
+		await dbStore.put({ ...secondCategory, index: firstCategory.index });
+		await dbStore.put({ ...firstCategory, index: secondCategory.index });
+	}
+
+	postMessage({ type: 'switchCategories', payload: categoryIds });
+	update((categories) => {
+		const first = categories.find((category) => category.id === categoryIds[0]);
+		const second = categories.find((category) => category.id === categoryIds[1]);
+		if (!first || !second) return categories;
+		return categories
+			.map((category) => {
+				switch (category.id) {
+					case first.id:
+						return { ...first, index: second.index };
+					case second.id:
+						return { ...second, index: first.index };
+					default:
+						return category;
+				}
+			})
+			.sort((a, b) => a.index - b.index);
+	});
+};
+
+const updateCategories = async (categories: Category[]) => {
+	const dbStore = db.transaction('categories', 'readwrite').objectStore('categories');
+	const promises = categories.map((category) => dbStore.put(category));
+
+	await Promise.all(promises);
+	postMessage({ type: 'updateCategories', payload: categories });
+	set(categories);
+};
+
 const deleteCategory = async (category: Category) => {
 	await entries.deleteEntriesByCategory(category);
 
@@ -40,4 +78,11 @@ const deleteCategory = async (category: Category) => {
 	}
 };
 
-export const categories = { subscribe, createCategory, updateCategory, deleteCategory };
+export const categories = {
+	subscribe,
+	createCategory,
+	updateCategory,
+	deleteCategory,
+	updateCategories,
+	switchCategories
+};

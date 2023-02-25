@@ -1,6 +1,6 @@
 import type { ActionMessages, Category, Entry } from '$lib/types';
-import type { EntryStore } from './entries';
 import type { CategoryStore } from './categories';
+import type { EntryStore } from './entries';
 
 interface EntryChannelActions {
 	createEntry: (payload: Entry) => void;
@@ -13,6 +13,8 @@ interface CategoryChannelActions {
 	createCategory: (payload: Category) => void;
 	updateCategory: (payload: Category) => void;
 	deleteCategory: (payload: Category) => void;
+	switchCategories: (payload: [string, string]) => void;
+	updateCategories: (payload: Category[]) => void;
 }
 
 type EntryMessages = ActionMessages<EntryChannelActions>;
@@ -60,7 +62,7 @@ export class EntryChannel {
 export class CategoryChannel {
 	postMessage: (message: CategoryMessages) => void;
 
-	constructor({ update }: CategoryStore) {
+	constructor({ update, set }: CategoryStore) {
 		const channel = new BroadcastChannel('categories');
 		this.postMessage = channel.postMessage.bind(channel);
 
@@ -75,12 +77,34 @@ export class CategoryChannel {
 			},
 			deleteCategory: (category) => {
 				update((categories) => categories.filter((existing) => existing.id !== category.id));
+			},
+			switchCategories: (categoryIds) => {
+				update((categories) => {
+					const first = categories.find((category) => category.id === categoryIds[0]);
+					const second = categories.find((category) => category.id === categoryIds[1]);
+					if (!first || !second) return categories;
+					return categories.map((category) => {
+						switch (category.id) {
+							case first.id:
+								return { ...category, index: second.index };
+							case second.id:
+								return { ...category, index: first.index };
+							default:
+								return category;
+						}
+					});
+				});
+			},
+
+			updateCategories: (categories) => {
+				set(categories);
 			}
 		};
 
 		channel.onmessage = (e: MessageEvent<CategoryMessages>) => {
 			const { payload, type } = e.data;
 			if (actions[type]) {
+				// @ts-ignore: type and payload should be matching when received
 				actions[type](payload);
 			}
 		};
