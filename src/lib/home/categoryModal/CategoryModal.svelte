@@ -18,7 +18,7 @@
 	const onDragExit = () => (dragging = null);
 	const onHoverDrag = async (to: Category) => {
 		if (!dragging || dragging === to.id) return;
-    console.log("working maybe");
+		console.log('working maybe');
 		await categories.switchCategories([dragging, to.id]);
 	};
 
@@ -60,7 +60,7 @@
 		<ul
 			on:mouseup={onDragExit}
 			on:mouseleave={onDragExit}
-			class="flex flex-col gap-1 h-40 overflow-y-scroll scrollbar-thin pl-4 pr-6 scrollbar-thumb-stone-200 dark:scrollbar-thumb-stone-700 dark:scrollbar-track-stone-900 active:cursor-grabbing"
+			class={'flex flex-col gap-1 h-40 overflow-y-scroll scrollbar-thin pl-4 pr-6 scrollbar-thumb-stone-200 dark:scrollbar-thumb-stone-700 dark:scrollbar-track-stone-900 active:!cursor-grabbing active:!select-none'}
 		>
 			{#each $categories as category (category.id)}
 				<li

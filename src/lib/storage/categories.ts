@@ -58,15 +58,6 @@ const switchCategories = async (categoryIds: [string, string]) => {
 	});
 };
 
-const updateCategories = async (categories: Category[]) => {
-	const dbStore = db.transaction('categories', 'readwrite').objectStore('categories');
-	const promises = categories.map((category) => dbStore.put(category));
-
-	await Promise.all(promises);
-	postMessage({ type: 'updateCategories', payload: categories });
-	set(categories);
-};
-
 const deleteCategory = async (category: Category) => {
 	await entries.deleteEntriesByCategory(category);
 
@@ -83,6 +74,5 @@ export const categories = {
 	createCategory,
 	updateCategory,
 	deleteCategory,
-	updateCategories,
 	switchCategories
 };

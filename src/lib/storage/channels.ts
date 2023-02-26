@@ -14,7 +14,6 @@ interface CategoryChannelActions {
 	updateCategory: (payload: Category) => void;
 	deleteCategory: (payload: Category) => void;
 	switchCategories: (payload: [string, string]) => void;
-	updateCategories: (payload: Category[]) => void;
 }
 
 type EntryMessages = ActionMessages<EntryChannelActions>;
@@ -62,7 +61,7 @@ export class EntryChannel {
 export class CategoryChannel {
 	postMessage: (message: CategoryMessages) => void;
 
-	constructor({ update, set }: CategoryStore) {
+	constructor({ update }: CategoryStore) {
 		const channel = new BroadcastChannel('categories');
 		this.postMessage = channel.postMessage.bind(channel);
 
@@ -94,10 +93,6 @@ export class CategoryChannel {
 						}
 					});
 				});
-			},
-
-			updateCategories: (categories) => {
-				set(categories);
 			}
 		};
 
